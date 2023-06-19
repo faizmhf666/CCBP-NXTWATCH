@@ -1,0 +1,7 @@
+.below-header-container {
+  display: flex;
+}
+.home-banner {
+  background-image: url('https://assets.ccbp.in/frontend/react-js/nxt-watch-banner-bg.png');
+  background-size: cover;
+}
