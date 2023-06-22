@@ -2,10 +2,16 @@ import {Component} from 'react'
 import Cookies from 'js-cookie'
 import ReactPlayer from 'react-player'
 import Loader from 'react-loader-spinner'
+import AppContext from '../../Context/AppContext'
 
 import Header from '../Header'
 import Sidebar from '../Sidebar'
-// import './index.css'
+import {
+  MainContainer,
+  ActiveButton,
+  SavedButton,
+  SaveButton,
+} from './StyledComponents'
 
 const callStatusCodes = {
   loading: 'LOADING',
@@ -18,6 +24,8 @@ class VideoDetails extends Component {
     apiCallStatus: callStatusCodes.loading,
     videosListHome: {},
     isPlaying: false,
+    isLiked: false,
+    isDisliked: false,
   }
 
   componentDidMount() {
@@ -69,40 +77,86 @@ class VideoDetails extends Component {
     this.setState(prevState => ({isPlaying: !prevState.isPlaying}))
   }
 
-  renderVideoList = () => {
-    const {videosListHome, isPlaying} = this.state
-
-    const {
-      title,
-      videoUrl,
-      channelName,
-      channelProfileImg,
-      subscriberCount,
-      viewCount,
-      publishedAt,
-      description,
-    } = videosListHome
-    return (
-      <div>
-        <div className="video-container">
-          <h1 className="heading">Video Player</h1>
-          <div className="responsive-container">
-            <ReactPlayer url={videoUrl} playing={isPlaying} />
-            <img src={channelProfileImg} alt="channel logo" />
-            <p>{title}</p>
-            <p>{viewCount}</p>
-            <p>{publishedAt}</p>
-            <p>{channelName}</p>
-            <p>{subscriberCount}</p>
-            <p>{description}</p>
-            <button type="button">Like</button>
-            <button type="button">Dislike</button>
-            <button type="button">Save</button>
-          </div>
-        </div>
-      </div>
-    )
+  changeActiveLike = () => {
+    this.setState({
+      isLiked: true,
+      isDisliked: false,
+    })
   }
+
+  changeActiveDislike = () => {
+    this.setState({
+      isDisliked: true,
+      isLiked: false,
+    })
+  }
+
+  renderVideoList = () => (
+    <AppContext.Consumer>
+      {value => {
+        const {updateSavedList, removeVideo, savedList, lightTheme} = value
+        const {videosListHome, isPlaying, isLiked, isDisliked} = this.state
+        const {
+          title,
+          videoUrl,
+          channelName,
+          channelProfileImg,
+          subscriberCount,
+          viewCount,
+          publishedAt,
+          description,
+        } = videosListHome
+        const isExisting = savedList.find(each => each.id === videosListHome.id)
+        const addVideo = () => {
+          updateSavedList({...videosListHome})
+        }
+
+        const onRemove = () => {
+          removeVideo(videosListHome)
+        }
+        return (
+          <MainContainer data-testid="videoItemDetails" lightTheme={lightTheme}>
+            <div className="video-container">
+              <h1 className="heading">Video Player</h1>
+              <div className="responsive-container">
+                <ReactPlayer url={videoUrl} playing={isPlaying} />
+                <img src={channelProfileImg} alt="channel logo" />
+                <p>{title}</p>
+                <p>{viewCount}</p>
+                <p>{publishedAt}</p>
+                <p>{channelName}</p>
+                <p>{subscriberCount}</p>
+                <p>{description}</p>
+                <ActiveButton
+                  type="button"
+                  onClick={this.changeActiveLike}
+                  value={isLiked}
+                >
+                  Like
+                </ActiveButton>
+                <ActiveButton
+                  type="button"
+                  onClick={this.changeActiveDislike}
+                  value={isDisliked}
+                >
+                  Dislike
+                </ActiveButton>
+                {isExisting ? (
+                  <SavedButton type="button" onClick={onRemove}>
+                    Saved
+                  </SavedButton>
+                ) : (
+                  <SaveButton type="button" onClick={addVideo}>
+                    Save
+                  </SaveButton>
+                )}
+              </div>
+            </div>
+          </MainContainer>
+        )
+      }}
+    </AppContext.Consumer>
+  )
 
   renderLoadingView = () => (
     <div className="loader-container" data-testid="loader">
@@ -144,13 +198,13 @@ class VideoDetails extends Component {
 
   render() {
     return (
-      <div data-testid="videoItemDetails">
+      <>
         <Header />
         <div className="below-header-container">
           <Sidebar />
           <div>{this.renderPortView()}</div>
         </div>
-      </div>
+      </>
     )
   }
 }

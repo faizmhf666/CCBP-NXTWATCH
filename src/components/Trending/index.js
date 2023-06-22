@@ -1,11 +1,12 @@
 import {Component} from 'react'
 import Cookies from 'js-cookie'
 import Loader from 'react-loader-spinner'
+import AppContext from '../../Context/AppContext'
 
 import Header from '../Header'
 import Sidebar from '../Sidebar'
 import HomeVideoList from '../HomeVideoList'
-// import './index.css'
+import {MainContainer, ListContainer} from './StyledComponents'
 
 const callStatusCodes = {
   loading: 'LOADING',
@@ -79,11 +80,11 @@ class Trending extends Component {
             </button>
           </div>
         ) : (
-          <ul>
+          <ListContainer>
             {videosListHome.map(each => (
               <HomeVideoList homeVideoList={each} key={each.id} />
             ))}
-          </ul>
+          </ListContainer>
         )}
       </div>
     )
@@ -127,16 +128,23 @@ class Trending extends Component {
 
   render() {
     return (
-      <div data-testid="trending">
-        <Header />
-        <div className="below-header-container">
-          <Sidebar />
-          <div>
-            <h1>Trending</h1>
-            {this.renderPortView()}
-          </div>
-        </div>
-      </div>
+      <AppContext.Consumer>
+        {value => {
+          const {lightTheme} = value
+          return (
+            <div>
+              <Header />
+              <div className="below-header-container">
+                <Sidebar />
+                <MainContainer lightTheme={lightTheme} data-testid="trending">
+                  <h1>Trending</h1>
+                  {this.renderPortView()}
+                </MainContainer>
+              </div>
+            </div>
+          )
+        }}
+      </AppContext.Consumer>
     )
   }
 }

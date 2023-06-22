@@ -5,7 +5,8 @@ import Loader from 'react-loader-spinner'
 import Header from '../Header'
 import Sidebar from '../Sidebar'
 import GameVideoList from '../GameVideoList'
-// import './index.css'
+import AppContext from '../../Context/AppContext'
+import {MainContainer} from './StyledComponents'
 
 const callStatusCodes = {
   loading: 'LOADING',
@@ -124,16 +125,23 @@ class Gaming extends Component {
 
   render() {
     return (
-      <div data-testid="gaming">
-        <Header />
-        <div className="below-header-container">
-          <Sidebar />
-          <div>
-            <h1>Gaming</h1>
-            {this.renderPortView()}
-          </div>
-        </div>
-      </div>
+      <AppContext.Consumer>
+        {value => {
+          const {lightTheme} = value
+          return (
+            <MainContainer lightTheme={lightTheme} data-testid="gaming">
+              <Header />
+              <div className="below-header-container">
+                <Sidebar />
+                <div>
+                  <h1>Gaming</h1>
+                  {this.renderPortView()}
+                </div>
+              </div>
+            </MainContainer>
+          )
+        }}
+      </AppContext.Consumer>
     )
   }
 }

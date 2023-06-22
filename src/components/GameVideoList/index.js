@@ -17,7 +17,7 @@ const GameVideoList = props => {
 
   return (
     <li>
-      <Link to={`/videos/:${id}`}>
+      <Link to={`/videos/${id}`}>
         <div>
           <img src={thumbnail} alt="video thumbnail" />
           <div>

@@ -1,7 +1,9 @@
 import {Component} from 'react'
 import Cookies from 'js-cookie'
 import {Redirect} from 'react-router-dom'
-import './index.css'
+import AppContext from '../../Context/AppContext'
+
+import {LoginButton, MainContainer} from './StyledComponents'
 
 class Login extends Component {
   state = {
@@ -58,48 +60,55 @@ class Login extends Component {
     }
 
     return (
-      <div>
-        <img
-          src="https://assets.ccbp.in/frontend/react-js/nxt-watch-logo-light-theme-img.png"
-          alt="website logo"
-        />
-        <div>
-          <form onSubmit={this.onSubmitForm}>
-            <div>
-              <label htmlFor="username">USERNAME</label>
-              <input
-                type="text"
-                id="username"
-                onChange={this.inputUsername}
-                value={username}
-                placeholder="Username"
-              />
-            </div>
-            <div>
-              <label htmlFor="password">PASSWORD</label>
-              <input
-                type={inputType}
-                id="password"
-                onChange={this.inputPassword}
-                value={password}
-                placeholder="Password"
-              />
-            </div>
-            <div>
-              <input
-                type="checkbox"
-                id="checkbox"
-                onChange={this.checkboxChange}
-              />
-              <label htmlFor="checkbox">Show Password</label>
-            </div>
-            {showLoginError && <p>*{error}</p>}
-            <button type="submit" className="login-button">
-              Login
-            </button>
-          </form>
-        </div>
-      </div>
+      <AppContext.Consumer>
+        {value => {
+          const {lightTheme} = value
+          const webLogo = lightTheme
+            ? 'https://assets.ccbp.in/frontend/react-js/nxt-watch-logo-light-theme-img.png'
+            : 'https://assets.ccbp.in/frontend/react-js/nxt-watch-logo-dark-theme-img.png'
+          return (
+            <MainContainer>
+              <div>
+                <img src={webLogo} alt="website logo" />
+                <div>
+                  <form onSubmit={this.onSubmitForm}>
+                    <div>
+                      <label htmlFor="username">USERNAME</label>
+                      <input
+                        type="text"
+                        id="username"
+                        onChange={this.inputUsername}
+                        value={username}
+                        placeholder="Username"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="password">PASSWORD</label>
+                      <input
+                        type={inputType}
+                        id="password"
+                        onChange={this.inputPassword}
+                        value={password}
+                        placeholder="Password"
+                      />
+                    </div>
+                    <div>
+                      <input
+                        type="checkbox"
+                        id="checkbox"
+                        onChange={this.checkboxChange}
+                      />
+                      <label htmlFor="checkbox">Show Password</label>
+                    </div>
+                    {showLoginError && <p>*{error}</p>}
+                    <LoginButton type="submit">Login</LoginButton>
+                  </form>
+                </div>
+              </div>
+            </MainContainer>
+          )
+        }}
+      </AppContext.Consumer>
     )
   }
 }

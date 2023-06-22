@@ -3,11 +3,11 @@ import Cookies from 'js-cookie'
 import Loader from 'react-loader-spinner'
 import {FaSearch} from 'react-icons/fa'
 import {AiOutlineClose} from 'react-icons/ai'
-
+import AppContext from '../../Context/AppContext'
+import {HomeBanner, BelowHeaderContainer} from './StyledComponents'
 import Header from '../Header'
 import Sidebar from '../Sidebar'
 import HomeVideoList from '../HomeVideoList'
-import './index.css'
 
 const callStatusCodes = {
   loading: 'LOADING',
@@ -139,49 +139,60 @@ class Home extends Component {
   }
 
   render() {
-    const {showBanner, searchInputVal} = this.state
     return (
-      <div data-testid="home">
-        <Header />
-        <div className="below-header-container">
-          <Sidebar />
-          <div>
-            {showBanner ? (
-              <div className="home-banner" data-testid="banner">
-                <img
-                  src="https://assets.ccbp.in/frontend/react-js/nxt-watch-logo-light-theme-img.png"
-                  alt="nxt watch logo"
-                />
-                <button
-                  type="button"
-                  data-testid="close"
-                  onClick={this.bannerStatus}
-                >
-                  <AiOutlineClose />
-                </button>
-                <p>Buy Nxt Watch Premium plans with UPI</p>
-                <button type="button">GET IT NOW</button>
-              </div>
-            ) : null}
+      <AppContext.Consumer>
+        {value => {
+          const {lightTheme} = value
+          const {showBanner, searchInputVal} = this.state
+          return (
             <div>
-              <input
-                type="search"
-                placeholder="Search"
-                value={searchInputVal}
-                onChange={this.onSearchInput}
-              />
-              <button
-                type="button"
-                onClick={this.onTryAgain}
-                data-testid="searchButton"
+              <Header />
+              <BelowHeaderContainer
+                lightTheme={lightTheme}
+                data-testid="home"
+                className="below-header-container"
               >
-                <FaSearch />
-              </button>
+                <Sidebar />
+                <div>
+                  {showBanner ? (
+                    <HomeBanner data-testid="banner">
+                      <img
+                        src="https://assets.ccbp.in/frontend/react-js/nxt-watch-logo-light-theme-img.png"
+                        alt="nxt watch logo"
+                      />
+                      <button
+                        type="button"
+                        data-testid="close"
+                        onClick={this.bannerStatus}
+                      >
+                        <AiOutlineClose />
+                      </button>
+                      <p>Buy Nxt Watch Premium plans with UPI</p>
+                      <button type="button">GET IT NOW</button>
+                    </HomeBanner>
+                  ) : null}
+                  <div>
+                    <input
+                      type="search"
+                      placeholder="Search"
+                      value={searchInputVal}
+                      onChange={this.onSearchInput}
+                    />
+                    <button
+                      type="button"
+                      onClick={this.onTryAgain}
+                      data-testid="searchButton"
+                    >
+                      <FaSearch />
+                    </button>
+                  </div>
+                  {this.renderPortView()}
+                </div>
+              </BelowHeaderContainer>
             </div>
-            {this.renderPortView()}
-          </div>
-        </div>
-      </div>
+          )
+        }}
+      </AppContext.Consumer>
     )
   }
 }

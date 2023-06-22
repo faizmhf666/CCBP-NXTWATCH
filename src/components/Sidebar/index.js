@@ -1,6 +1,7 @@
 import {Link, withRouter} from 'react-router-dom'
 import {FaHome, FaFire, FaGamepad} from 'react-icons/fa'
 import {MdPlaylistAdd} from 'react-icons/md'
+import AppContext from '../../Context/AppContext'
 
 const Sidebar = () => (
   <nav>

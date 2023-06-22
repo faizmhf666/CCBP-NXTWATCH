@@ -1,13 +1,3 @@
-.header-main {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-}
-.website-logo {
-  height: 40px;
-  margin: 10px;
-}
 .nav-buttons {
   display: flex;
   justify-content: center;
@@ -19,11 +9,10 @@
 .nav-button {
   background-color: transparent;
   border: 0px solid transparent;
-  padding: 10px;
   margin-right: 10px;
 }
 .theme-icon {
-  height: 40px;
+  height: 80px;
 }
 .profile-img {
   width: 28px;
